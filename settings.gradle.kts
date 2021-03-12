@@ -8,4 +8,6 @@
  */
 
 rootProject.name = "lomboker"
-include("app", "list", "utilities")
+include("app",
+    "lib")
+
