@@ -1,10 +1,7 @@
-// Hey, this is a comment
-
-
-// Another one
+import lombok.Getter;
 
 class A {
-    
+
     @Getter
     private int number = 5;
 

@@ -3,24 +3,20 @@
  */
 package de.lomboker.app.getter;
 
-import picocli.CommandLine;
+import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import static de.lomboker.lib.GetterReducer.reduceGetters;
+import static de.lomboker.lib.TrivialGetters.reduceGetters;
 
-public class Getter implements Runnable {
+@Command(name = "getter", description = "reduce trivial getters")
+public class ReduceGetter implements Runnable {
 
     @Parameters(index = "0")
     File file;
-
-    public static void main(String[] args) {
-        int exitCode = new CommandLine(new Getter()).execute(args);
-        System.exit(exitCode);
-	}
 
     @Override
     public void run() {

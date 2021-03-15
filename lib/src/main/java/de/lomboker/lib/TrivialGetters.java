@@ -3,16 +3,13 @@
  */
 package de.lomboker.lib;
 
-import com.github.javaparser.StaticJavaParser;
+import com.github.javaparser.ast.AccessSpecifier;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
-import com.github.javaparser.ast.expr.AnnotationExpr;
 import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.stmt.Statement;
-import com.github.javaparser.ast.visitor.GenericVisitor;
-import com.github.javaparser.ast.visitor.VoidVisitor;
 import com.github.javaparser.printer.lexicalpreservation.LexicalPreservingPrinter;
 
 import java.util.*;
@@ -20,27 +17,33 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 
-public class GetterReducer {
+public class TrivialGetters {
     
     public static String reduceGetters(String code) {
-        CompilationUnit cu = StaticJavaParser.parse(code);
+
+        ClassWrapper wrapper = new ClassWrapper(code);
+
+        CompilationUnit cu = wrapper.cu;
         LexicalPreservingPrinter.setup(cu);
 
         Map<String, FieldDeclaration> members = new HashMap<>();
-        for (FieldDeclaration fd: cu.findAll(FieldDeclaration.class)) {
+        for (FieldDeclaration fd: wrapper.fields) {
             members.put(fd.getVariable(0).getName().asString(), fd);
         }
 
         //all methods that return a field
-        Map<String, MethodDeclaration> methods = cu
-                .findAll(MethodDeclaration.class)
+        Map<String, MethodDeclaration> methods = wrapper.methods
                 .stream()
-                .filter(GetterReducer::isGetter)
-                .collect(Collectors.toMap(GetterReducer::getReturned, Function.identity()));
+                .filter(md -> isTrivialGetter(md, members.keySet()))
+                .collect(Collectors.toMap(TrivialGetters::getReturned, Function.identity()));
 
         //intersect keys
         Set<String> intersection = new HashSet<>(members.keySet()); // use the copy constructor
         intersection.retainAll(methods.keySet());
+
+        if (!intersection.isEmpty()) {
+            cu.addImport("lombok.Getter");
+        }
 
         //add annotation and remove method
         for (String name: intersection) {
@@ -54,6 +57,8 @@ public class GetterReducer {
     /**
      * Determines whether a method is a Getter i.e. whether it
      * <ul>
+     *   <li> is public </li>
+     *   <li> has a return type (not void) </li>
      *   <li> takes no parameters </li>
      *   <li> has exactly one command that returns an expression without spaces</li>
      * </ul>
@@ -62,11 +67,17 @@ public class GetterReducer {
      * @return true if method is a getter, false otherwise
      */
     public static boolean isGetter(MethodDeclaration md) {
+
+        boolean isPublic = AccessSpecifier.PUBLIC.equals(md.getAccessSpecifier());
+        boolean isNotVoid = !md.getType().isVoidType();
         boolean noParameters = md.getParameters().isEmpty();
 
         Optional<Expression> returnStm = getReturnStatement(md);
 
-        return noParameters && returnStm.isPresent();
+        return isPublic
+                && isNotVoid
+                && noParameters
+                && returnStm.isPresent();
     }
 
     private static Optional<Expression> getReturnStatement(MethodDeclaration md) {
@@ -92,7 +103,7 @@ public class GetterReducer {
         return oExpression;
     }
 
-    private static boolean isTrivialGetter(MethodDeclaration md, Set<String> fields) {
+    public static boolean isTrivialGetter(MethodDeclaration md, Set<String> fields) {
         if (!isGetter(md)) {
             return false;
         }
@@ -100,20 +111,19 @@ public class GetterReducer {
         //Verify that the name is what lombok would create
         String methodName = md.getNameAsString();
         String type = md.getTypeAsString();
-        if (fields.stream().noneMatch(f -> signatureMatch(methodName, type, f)))
+        if (fields.stream().noneMatch(f -> nameMatch(methodName, type, f)))
             return false;
 
         return true;
     }
 
-    private static boolean signatureMatch(String methodName, String type, String variable) {
-        if ("void".equals(type))
-            return false;
+    //assumptions: type is not void
+    private static boolean nameMatch(String methodName, String type, String variable) {
 
         if (!methodName.startsWith("boolean".equals(type) ? "has" : "get")) {
             return false;
         }
-        String tail = Character.toLowerCase(methodName.charAt(3)) + methodName.substring(3);
+        String tail = Character.toLowerCase(methodName.charAt(3)) + methodName.substring(4);
         return  tail.equals(variable);
 
     }
@@ -129,6 +139,27 @@ public class GetterReducer {
                 .filter(Statement::isReturnStmt)
                 .reduce((first, second) -> second).get() //last element
                 .asReturnStmt().getExpression().get().toString();
+    }
+
+    /* Count number of getters */
+
+    public static int countTrivialGetters(String code) {
+        ClassWrapper wrapper = new ClassWrapper(code);
+        Set<String> fields = wrapper.fieldNames;
+        long count = wrapper.methods.stream()
+                .filter(m -> isTrivialGetter(m,fields))
+                .count();
+
+        return (int) count;
+    }
+
+    public static int countFuzzyGetters(String code) {
+        ClassWrapper wrapper = new ClassWrapper(code);
+        long count = wrapper.methods.stream()
+                .filter(TrivialGetters::isGetter)
+                .count();
+
+        return (int) count;
     }
 
 }

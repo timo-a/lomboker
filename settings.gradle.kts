@@ -8,5 +8,6 @@
  */
 
 rootProject.name = "lomboker"
-include("app", "app-getter", "lib")
-include("getter-analysis")
+include("app",
+    "lib")
+

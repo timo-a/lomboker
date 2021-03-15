@@ -3,8 +3,23 @@
  */
 package de.lomboker.app;
 
-public class App {
+import picocli.CommandLine;
+import picocli.CommandLine.Command;
+
+@Command(name = "lomboker",
+        subcommands = {
+                CounterApp.class,
+                Reduce.class,
+                Mark.class
+})
+public class App implements Runnable {
     public static void main(String[] args) {
-        System.out.println("nothing implemented yet");
+        new CommandLine(new App()).execute(args);
     }
+
+    @Override
+    public void run() {
+        System.out.println("I'm lomboker. you need to cal a subcommand like count|reduce|mark");
+    }
+
 }
