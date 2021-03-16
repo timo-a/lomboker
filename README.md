@@ -12,8 +12,10 @@ Lomboker helps you scale.
 lomboker$ cp ./lib/src/test/resources/ClassAInput.java ./lib/src/test/resources/ClassAOutput.java
 lomboker$ ./gradlew :app:run --args=".reduce getter ./lib/src/test/resources/ClassAInput.java"
 
-lomboker$ #./gradlew :app-getter:assemble
-lomboker$ #java -jar ./app-getter/build/libs/lomboker.jar reduce getter lib/src/test/resources/ClassAInput.java
+lomboker$ ./gradlew :app-getter:assemble
+lomboker$ alias lomboker='java -jar ./app-getter/build/libs/lomboker.jar'
+lomboker$ lomboker reduce getter lib/src/test/resources/ClassAInput.java
+lomboker$ ls lib/src/test/resources/Class*.java | lomboker count | column -t
 ```
 
 
