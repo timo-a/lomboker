@@ -160,10 +160,13 @@ public class TrivialSetters {
     }
 
     private static boolean nameMatch(String methodName, String variable) {
+        boolean correctPrefix = methodName.startsWith("set");
+        boolean longEnough = methodName.length() > "set".length();
 
-        if (!methodName.startsWith("set")) {
+        if (!correctPrefix || !longEnough) {
             return false;
         }
+
         String tail = Character.toLowerCase(methodName.charAt(3)) + methodName.substring(4);
         return  tail.equals(variable);
 

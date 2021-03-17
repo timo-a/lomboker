@@ -120,9 +120,13 @@ public class TrivialGetters {
     //assumptions: type is not void
     private static boolean nameMatch(String methodName, String type, String variable) {
 
-        if (!methodName.startsWith("boolean".equals(type) ? "has" : "get")) {
+        boolean correctPrefix = methodName.startsWith("boolean".equals(type) ? "has" : "get");
+        boolean longEnough = methodName.length() > Math.max("get".length(), "has".length());
+
+        if (!correctPrefix || !longEnough) {
             return false;
         }
+
         String tail = Character.toLowerCase(methodName.charAt(3)) + methodName.substring(4);
         return  tail.equals(variable);
 
