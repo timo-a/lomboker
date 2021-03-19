@@ -29,10 +29,7 @@ public class TrivialSetters {
         CompilationUnit cu = wrapper.cu;
         LexicalPreservingPrinter.setup(cu);
 
-        Map<String, FieldDeclaration> members = new HashMap<>();
-        for (FieldDeclaration fd: wrapper.fields) {
-            members.put(fd.getVariable(0).getName().asString(), fd);
-        }
+        Map<String, FieldDeclaration> members = wrapper.fieldsByName;
 
         //all methods that return a field
         Map<String, MethodDeclaration> methods = wrapper.methods
@@ -52,7 +49,9 @@ public class TrivialSetters {
         //add annotation and remove method
         for (String name: intersection) {
             members.get(name).addMarkerAnnotation("Setter");
-            methods.get(name).remove();
+            var method = methods.get(name);
+            method.removeJavaDocComment();
+            method.remove();
         }
 
         return LexicalPreservingPrinter.print(cu);
@@ -146,10 +145,13 @@ public class TrivialSetters {
      * </ul>
      *
      */
-    private static boolean isTrivialSetter(MethodDeclaration md, Set<String> fields) {
+    public static boolean isTrivialSetter(MethodDeclaration md, Set<String> fields) {
         if (!isSetter(md)) {
             return false;
         }
+
+        if (!md.getAnnotations().isEmpty())
+            return false;
 
         //Verify that the name is what lombok would create
         String methodName = md.getNameAsString();

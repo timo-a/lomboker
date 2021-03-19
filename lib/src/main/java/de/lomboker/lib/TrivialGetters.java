@@ -8,8 +8,10 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.comments.JavadocComment;
 import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.stmt.Statement;
+import com.github.javaparser.javadoc.Javadoc;
 import com.github.javaparser.printer.lexicalpreservation.LexicalPreservingPrinter;
 
 import java.util.*;
@@ -26,10 +28,7 @@ public class TrivialGetters {
         CompilationUnit cu = wrapper.cu;
         LexicalPreservingPrinter.setup(cu);
 
-        Map<String, FieldDeclaration> members = new HashMap<>();
-        for (FieldDeclaration fd: wrapper.fields) {
-            members.put(fd.getVariable(0).getName().asString(), fd);
-        }
+        Map<String, FieldDeclaration> members = wrapper.fieldsByName;
 
         //all methods that return a field
         Map<String, MethodDeclaration> methods = wrapper.methods
@@ -48,7 +47,9 @@ public class TrivialGetters {
         //add annotation and remove method
         for (String name: intersection) {
             members.get(name).addMarkerAnnotation("Getter");
-            methods.get(name).remove();
+            var method = methods.get(name);
+            method.removeJavaDocComment();
+            method.remove();
         }
 
         return LexicalPreservingPrinter.print(cu);
@@ -107,6 +108,9 @@ public class TrivialGetters {
         if (!isGetter(md)) {
             return false;
         }
+
+        if (!md.getAnnotations().isEmpty())
+            return false;
 
         //Verify that the name is what lombok would create
         String methodName = md.getNameAsString();
