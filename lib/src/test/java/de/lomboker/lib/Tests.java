@@ -19,7 +19,7 @@ public class Tests {
         String input = readFile(fileName);
         String expected = readFile(fileNameRef);
 
-        assertEquals(expected, FuzzyGetterMarker.markFuzzyGetters(input));
+        assertEquals(expected, FuzzyGetters.markFuzzyGetters(input));
 
     }
 
@@ -30,7 +30,7 @@ public class Tests {
         String input = readFile(fileName);
         String expected = readFile(fileNameRef);
 
-        assertEquals(expected, FuzzySetterMarker.markFuzzySetters(input));
+        assertEquals(expected, FuzzySetters.markFuzzySetters(input));
 
     }
 

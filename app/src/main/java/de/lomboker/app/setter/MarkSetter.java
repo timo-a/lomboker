@@ -11,7 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import static de.lomboker.lib.FuzzySetterMarker.markFuzzySetters;
+import static de.lomboker.lib.FuzzySetters.markFuzzySetters;
 
 @Command(name = "setter", description = "mark non-trivial setters")
 public class MarkSetter implements Runnable {

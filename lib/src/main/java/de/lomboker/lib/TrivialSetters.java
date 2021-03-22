@@ -199,13 +199,4 @@ public class TrivialSetters extends Trivial {
         return (int) count;
     }
 
-    public static int countFuzzySetters(String code) {
-        ClassWrapper wrapper = new ClassWrapper(code);
-        long count = wrapper.methods.stream()
-                .filter(TrivialSetters::isSetter)
-                .count();
-
-        return (int) count;
-    }
-
 }

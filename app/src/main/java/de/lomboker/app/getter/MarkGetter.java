@@ -10,7 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import static de.lomboker.lib.FuzzyGetterMarker.markFuzzyGetters;
+import static de.lomboker.lib.FuzzyGetters.markFuzzyGetters;
 
 @Command(name = "getter", description = "mark non-trivial getters")
 public class MarkGetter implements Runnable {

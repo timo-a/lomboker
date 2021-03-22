@@ -3,6 +3,8 @@
  */
 package de.lomboker.app;
 
+import de.lomboker.lib.FuzzyGetters;
+import de.lomboker.lib.FuzzySetters;
 import de.lomboker.lib.TrivialGetters;
 import de.lomboker.lib.TrivialSetters;
 import picocli.CommandLine;
@@ -52,10 +54,10 @@ public class CounterApp implements Runnable {
             return fname + " ioexception reading file";
         }
         int trivialGetters = TrivialGetters.countTrivialGetters(code);
-        int fuzzyGetters   = TrivialGetters.countFuzzyGetters(code);
+        int fuzzyGetters   = FuzzyGetters.countFuzzyGetters(code);
 
         int trivialSetters = TrivialSetters.countTrivialSetters(code);
-        int fuzzySetters   = TrivialSetters.countFuzzySetters(code);
+        int fuzzySetters   = FuzzySetters.countFuzzySetters(code);
 
         return String.format("%d %d %d %d",
                 trivialGetters,

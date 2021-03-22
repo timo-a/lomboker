@@ -9,16 +9,17 @@ import com.github.javaparser.printer.lexicalpreservation.LexicalPreservingPrinte
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static de.lomboker.lib.TrivialSetters.isSetter;
-import static de.lomboker.lib.TrivialSetters.isTrivialSetter;
+import static de.lomboker.lib.TrivialGetters.isGetter;
+import static de.lomboker.lib.TrivialGetters.isTrivialGetter;
 
-public class FuzzySetterMarker {
+public class FuzzyGetters {
 
-    private static final String CHECK_COMMENT = "TODO Lomboker says check this potential setter";
+    private static final String CHECK_COMMENT = "TODO Lomboker says check this potential getter";
+
     /**
      * Marks all Getters that are not trivial i.e. might need manual refactoring(renaming) first.
      * */
-    public static String markFuzzySetters(String code){
+    public static String markFuzzyGetters(String code){
         CompilationUnit cu = StaticJavaParser.parse(code);
         LexicalPreservingPrinter.setup(cu);
 
@@ -27,19 +28,30 @@ public class FuzzySetterMarker {
                 .collect(Collectors.toSet());
 
         cu.findAll(MethodDeclaration.class).stream()
-                .filter(md -> isNonTrivialSetter(md, fieldNames))
-                .filter(md -> !isTrivialSetter(md, fieldNames))
+                .filter(md -> isNonTrivialGetter(md, fieldNames))
                 .forEach(md -> {md.setLineComment(CHECK_COMMENT);});
 
         return LexicalPreservingPrinter.print(cu);
     }
 
-    private static boolean isNonTrivialSetter(MethodDeclaration md, Set<String> fields) {
-        if (!isSetter(md)) {
+    private static boolean isNonTrivialGetter(MethodDeclaration md, Set<String> fields) {
+        if (!isGetter(md)) {
+            return false;
+        }
+
+        if (isTrivialGetter(md, fields)) {
             return false;
         }
 
         return true;
     }
 
+    public static int countFuzzyGetters(String code) {
+        ClassWrapper wrapper = new ClassWrapper(code);
+        long count = wrapper.methods.stream()
+                .filter(md -> isNonTrivialGetter(md, wrapper.fieldNames))
+                .count();
+
+        return (int) count;
+    }
 }

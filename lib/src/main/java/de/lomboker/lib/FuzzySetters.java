@@ -9,17 +9,17 @@ import com.github.javaparser.printer.lexicalpreservation.LexicalPreservingPrinte
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static de.lomboker.lib.TrivialGetters.isGetter;
 import static de.lomboker.lib.TrivialGetters.isTrivialGetter;
+import static de.lomboker.lib.TrivialSetters.isSetter;
+import static de.lomboker.lib.TrivialSetters.isTrivialSetter;
 
-public class FuzzyGetterMarker {
+public class FuzzySetters {
 
-    private static final String CHECK_COMMENT = "TODO Lomboker says check this potential getter";
-
+    private static final String CHECK_COMMENT = "TODO Lomboker says check this potential setter";
     /**
      * Marks all Getters that are not trivial i.e. might need manual refactoring(renaming) first.
      * */
-    public static String markFuzzyGetters(String code){
+    public static String markFuzzySetters(String code){
         CompilationUnit cu = StaticJavaParser.parse(code);
         LexicalPreservingPrinter.setup(cu);
 
@@ -28,19 +28,31 @@ public class FuzzyGetterMarker {
                 .collect(Collectors.toSet());
 
         cu.findAll(MethodDeclaration.class).stream()
-                .filter(md -> isNonTrivialGetter(md, fieldNames))
-                .filter(md -> !isTrivialGetter(md, fieldNames))
+                .filter(md -> isNonTrivialSetter(md, fieldNames))
+                .filter(md -> !isTrivialSetter(md, fieldNames))
                 .forEach(md -> {md.setLineComment(CHECK_COMMENT);});
 
         return LexicalPreservingPrinter.print(cu);
     }
 
-    private static boolean isNonTrivialGetter(MethodDeclaration md, Set<String> fields) {
-        if (!isGetter(md)) {
+    private static boolean isNonTrivialSetter(MethodDeclaration md, Set<String> fields) {
+        if (!isSetter(md)) {
+            return false;
+        }
+
+        if (isTrivialSetter(md, fields)) {
             return false;
         }
 
         return true;
     }
 
+    public static int countFuzzySetters(String code) {
+        ClassWrapper wrapper = new ClassWrapper(code);
+        long count = wrapper.methods.stream()
+                .filter(md -> isNonTrivialSetter(md, wrapper.fieldNames))
+                .count();
+
+        return (int) count;
+    }
 }

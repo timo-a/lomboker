@@ -173,13 +173,4 @@ public class TrivialGetters extends Trivial {
         return (int) count;
     }
 
-    public static int countFuzzyGetters(String code) {
-        ClassWrapper wrapper = new ClassWrapper(code);
-        long count = wrapper.methods.stream()
-                .filter(TrivialGetters::isGetter)
-                .count();
-
-        return (int) count;
-    }
-
 }
