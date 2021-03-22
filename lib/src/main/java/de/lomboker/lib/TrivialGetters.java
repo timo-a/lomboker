@@ -132,14 +132,17 @@ public class TrivialGetters extends Trivial {
     //assumptions: type is not void
     private static boolean nameMatch(String methodName, String type, String variable) {
 
-        boolean correctPrefix = methodName.startsWith("boolean".equals(type) ? "has" : "get");
-        boolean longEnough = methodName.length() > Math.max("get".length(), "has".length());
+        String prefix = "boolean".equals(type) ? "is" : "get";
+
+        boolean correctPrefix = methodName.startsWith(prefix);
+        boolean longEnough = methodName.length() > prefix.length();
 
         if (!correctPrefix || !longEnough) {
             return false;
         }
 
-        String tail = Character.toLowerCase(methodName.charAt(3)) + methodName.substring(4);
+        String tail = Character.toLowerCase(methodName.charAt(prefix.length()))
+                + methodName.substring(prefix.length() + 1);
         return  tail.equals(variable);
 
     }

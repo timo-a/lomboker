@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static de.lomboker.lib.TrivialGetters.isGetter;
+import static de.lomboker.lib.TrivialGetters.isTrivialGetter;
 
 public class FuzzyGetterMarker {
 
@@ -28,6 +29,7 @@ public class FuzzyGetterMarker {
 
         cu.findAll(MethodDeclaration.class).stream()
                 .filter(md -> isNonTrivialGetter(md, fieldNames))
+                .filter(md -> !isTrivialGetter(md, fieldNames))
                 .forEach(md -> {md.setLineComment(CHECK_COMMENT);});
 
         return LexicalPreservingPrinter.print(cu);

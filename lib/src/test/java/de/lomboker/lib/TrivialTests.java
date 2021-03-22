@@ -24,6 +24,17 @@ public class TrivialTests {
     }
 
     @Test
+    public void testBooleanGetter() throws IOException {
+        String fileName = "ClassWithBooleanGetterInput.java";
+        String fileNameRef = "ClassWithBooleanGetterLombok.java";
+        String input = readFile(fileName);
+        String expected = readFile(fileNameRef);
+
+        assertEquals(expected, TrivialGetters.reduceGetters(input));
+
+    }
+
+    @Test
     public void testSetter() throws IOException {
         String fileName = "ClassAWithSetterInput.java";
         String fileNameRef = "ClassAWithLombokSetter.java";

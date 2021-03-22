@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static de.lomboker.lib.TrivialSetters.isSetter;
+import static de.lomboker.lib.TrivialSetters.isTrivialSetter;
 
 public class FuzzySetterMarker {
 
@@ -27,6 +28,7 @@ public class FuzzySetterMarker {
 
         cu.findAll(MethodDeclaration.class).stream()
                 .filter(md -> isNonTrivialSetter(md, fieldNames))
+                .filter(md -> !isTrivialSetter(md, fieldNames))
                 .forEach(md -> {md.setLineComment(CHECK_COMMENT);});
 
         return LexicalPreservingPrinter.print(cu);
