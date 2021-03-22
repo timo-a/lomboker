@@ -13,7 +13,7 @@ import static de.lomboker.lib.TrivialGetters.isGetter;
 
 public class FuzzyGetterMarker {
 
-    private static final String CHECK_COMMENT = "Lomboker says check this potential getter";
+    private static final String CHECK_COMMENT = "TODO Lomboker says check this potential getter";
 
     /**
      * Marks all Getters that are not trivial i.e. might need manual refactoring(renaming) first.

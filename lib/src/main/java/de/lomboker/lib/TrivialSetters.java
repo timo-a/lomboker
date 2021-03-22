@@ -11,6 +11,7 @@ import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.expr.AssignExpr;
 import com.github.javaparser.ast.expr.Expression;
+import com.github.javaparser.ast.expr.MarkerAnnotationExpr;
 import com.github.javaparser.ast.stmt.ExpressionStmt;
 import com.github.javaparser.ast.stmt.Statement;
 import com.github.javaparser.printer.lexicalpreservation.LexicalPreservingPrinter;
@@ -20,7 +21,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 
-public class TrivialSetters {
+public class TrivialSetters extends Trivial {
     
     public static String reduceSetters(String code) {
 
@@ -150,7 +151,7 @@ public class TrivialSetters {
             return false;
         }
 
-        if (!md.getAnnotations().isEmpty())
+        if (!onlyTrivialAnnotations(md))
             return false;
 
         //Verify that the name is what lombok would create

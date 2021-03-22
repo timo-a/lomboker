@@ -13,7 +13,7 @@ import static de.lomboker.lib.TrivialSetters.isSetter;
 
 public class FuzzySetterMarker {
 
-    private static final String CHECK_COMMENT = "Lomboker says check this potential setter";
+    private static final String CHECK_COMMENT = "TODO Lomboker says check this potential setter";
     /**
      * Marks all Getters that are not trivial i.e. might need manual refactoring(renaming) first.
      * */

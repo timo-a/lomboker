@@ -9,7 +9,9 @@ import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.comments.JavadocComment;
+import com.github.javaparser.ast.expr.AnnotationExpr;
 import com.github.javaparser.ast.expr.Expression;
+import com.github.javaparser.ast.expr.MarkerAnnotationExpr;
 import com.github.javaparser.ast.stmt.Statement;
 import com.github.javaparser.javadoc.Javadoc;
 import com.github.javaparser.printer.lexicalpreservation.LexicalPreservingPrinter;
@@ -19,7 +21,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 
-public class TrivialGetters {
+public class TrivialGetters extends Trivial {
     
     public static String reduceGetters(String code) {
 
@@ -97,8 +99,13 @@ public class TrivialGetters {
 
         Optional<Expression> oExpression = onlyStmt.asReturnStmt().getExpression();
 
-        if (oExpression.isEmpty()
-            || oExpression.get().toString().contains(" "))
+        if (oExpression.isEmpty())
+            return Optional.empty();
+
+        var rExpr = oExpression.get().toString();
+        if ( rExpr.contains(" ")
+         || !rExpr.startsWith("this.") && rExpr.contains(".") // return member.getX()
+        )
             return Optional.empty();
 
         return oExpression;
@@ -109,7 +116,7 @@ public class TrivialGetters {
             return false;
         }
 
-        if (!md.getAnnotations().isEmpty())
+        if (!onlyTrivialAnnotations(md))
             return false;
 
         //Verify that the name is what lombok would create
@@ -120,6 +127,7 @@ public class TrivialGetters {
 
         return true;
     }
+
 
     //assumptions: type is not void
     private static boolean nameMatch(String methodName, String type, String variable) {
@@ -146,7 +154,8 @@ public class TrivialGetters {
         return md.getBody().get().getStatements().stream()
                 .filter(Statement::isReturnStmt)
                 .reduce((first, second) -> second).get() //last element
-                .asReturnStmt().getExpression().get().toString();
+                .asReturnStmt().getExpression().get().toString()
+                .replace("this.", "");
     }
 
     /* Count number of getters */
