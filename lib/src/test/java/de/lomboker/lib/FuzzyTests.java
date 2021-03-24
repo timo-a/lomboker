@@ -10,7 +10,7 @@ import java.nio.file.Files;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-public class Tests {
+public class FuzzyTests {
 
     @Test
     public void testGetterMarker() throws IOException {
@@ -27,6 +27,28 @@ public class Tests {
     public void testSetterMarker() throws IOException {
         String fileName = "ClassBWithSetterInput.java";
         String fileNameRef = "ClassBWithSetterComment.java";
+        String input = readFile(fileName);
+        String expected = readFile(fileNameRef);
+
+        assertEquals(expected, FuzzySetters.markFuzzySetters(input));
+
+    }
+
+    @Test
+    public void shouldKeepAnnotations() throws IOException {
+        String fileName = "Fuzzy/SetterWithAnnotation.java";
+        String fileNameRef = "Fuzzy/SetterWithAnnotation.marked.java";
+        String input = readFile(fileName);
+        String expected = readFile(fileNameRef);
+
+        assertEquals(expected, FuzzySetters.markFuzzySetters(input));
+
+    }
+
+    @Test
+    public void shouldKeepJavadoc() throws IOException {
+        String fileName = "Fuzzy/SetterWithJavadoc.java";
+        String fileNameRef = "Fuzzy/SetterWithJavadoc.marked.java";
         String input = readFile(fileName);
         String expected = readFile(fileNameRef);
 
