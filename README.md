@@ -27,12 +27,12 @@ cat counts.txt | awk '{gt+=$2; gf+=$3; st+=$4; sf+=$5} END {printf "     trivial
 cat counts.txt | awk '{print $1, $2}' | grep " 0$" | awk '{print $1}' > getterClasses.txt
 while read f; do lomboker reduce getter "$f"; done < getterClasses.txt;
 # put annotations on their own lines // capture first annotation (1) and  white space before it (2)
-cat counts.txt | xargs sed 's/^\(\(\s\{1,\}\)@\w\{1,\}(\([A-Za-z", \])\)\) @Getter/\1\n\2@Getter/'
+cat counts.txt | xargs sed 's/^\(\(\s\s*\)@\w\w*(\([0-9a-zA-Z", ])\)?\) @Getter/\1\n\2@Getter/'
 # reduce setters
 cat counts.txt | awk '{print $1, $4}' | grep " 0$" | awk '{print $1}' > setterClasses.txt
 while read f; do lomboker reduce setter "$f"; done < setterClasses.txt;
 # put annotations on their own lines // capture first annotation (1) and  white space before it (2)
-cat counts.txt | xargs sed 's/^\(\(\s\{1,\}\)@\w\{1,\}(\([A-Za-z", \])\)\) @Setter/\1\n\2@Setter/'
+cat counts.txt | xargs sed 's/^\(\(\s\s*\)@\w\w*(\([0-9a-zA-Z", ])\)?\) @Setter/\1\n\2@Setter/'
 # mark fuzzy getters
 cat counts.txt | awk '{print $1, $3}' | grep " 0$" | awk '{print $1}' > fuzzyGetters.txt
 while read f; do lomboker mark getter "$f"; done < fuzzyGetters.txt;
