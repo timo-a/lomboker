@@ -11,7 +11,6 @@ import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.expr.AssignExpr;
 import com.github.javaparser.ast.expr.Expression;
-import com.github.javaparser.ast.expr.MarkerAnnotationExpr;
 import com.github.javaparser.ast.stmt.ExpressionStmt;
 import com.github.javaparser.ast.stmt.Statement;
 import com.github.javaparser.printer.lexicalpreservation.LexicalPreservingPrinter;
@@ -176,7 +175,7 @@ public class TrivialSetters extends Trivial {
     }
 
     /**
-     * returns the name of the returned expression / a stng representation of the returned statement
+     * returns the name of the returned expression / a string representation of the returned statement
      * assumptions:
      *  - there is a last statement and it sets a variable
      *
