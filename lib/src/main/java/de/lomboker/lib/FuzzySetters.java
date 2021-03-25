@@ -4,8 +4,11 @@ import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.comments.Comment;
+import com.github.javaparser.ast.comments.LineComment;
 import com.github.javaparser.printer.lexicalpreservation.LexicalPreservingPrinter;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -13,11 +16,11 @@ import static de.lomboker.lib.TrivialGetters.isTrivialGetter;
 import static de.lomboker.lib.TrivialSetters.isSetter;
 import static de.lomboker.lib.TrivialSetters.isTrivialSetter;
 
-public class FuzzySetters {
+public class FuzzySetters extends Fuzzy {
 
     private static final String CHECK_COMMENT = "TODO Lomboker says check this potential setter";
     /**
-     * Marks all Getters that are not trivial i.e. might need manual refactoring(renaming) first.
+     * Marks all Setters that are not trivial i.e. might need manual refactoring(renaming) first.
      * */
     public static String markFuzzySetters(String code){
         CompilationUnit cu = StaticJavaParser.parse(code);
@@ -29,11 +32,15 @@ public class FuzzySetters {
 
         cu.findAll(MethodDeclaration.class).stream()
                 .filter(md -> isNonTrivialSetter(md, fieldNames))
-                .filter(md -> !isTrivialSetter(md, fieldNames))
-                .forEach(md -> {md.setLineComment(CHECK_COMMENT);});
+                .forEach(FuzzySetters::markMethod);
 
         return LexicalPreservingPrinter.print(cu);
     }
+
+    public static void markMethod(MethodDeclaration md) {
+        markWithStringLiteral(md, CHECK_COMMENT);
+    }
+
 
     private static boolean isNonTrivialSetter(MethodDeclaration md, Set<String> fields) {
         if (!isSetter(md)) {

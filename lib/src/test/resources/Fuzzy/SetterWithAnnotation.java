@@ -4,7 +4,7 @@ class A {
 
     @SuppressWarnings("javadoc")
     @Override
-    public void setNumber(int i) {
+    public void setTheNumber(int i) {
         number = i;
     }
 

@@ -4,15 +4,17 @@ import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.comments.Comment;
 import com.github.javaparser.printer.lexicalpreservation.LexicalPreservingPrinter;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import static de.lomboker.lib.TrivialGetters.isGetter;
 import static de.lomboker.lib.TrivialGetters.isTrivialGetter;
 
-public class FuzzyGetters {
+public class FuzzyGetters extends Fuzzy {
 
     private static final String CHECK_COMMENT = "TODO Lomboker says check this potential getter";
 
@@ -29,9 +31,13 @@ public class FuzzyGetters {
 
         cu.findAll(MethodDeclaration.class).stream()
                 .filter(md -> isNonTrivialGetter(md, fieldNames))
-                .forEach(md -> {md.setLineComment(CHECK_COMMENT);});
+                .forEach(FuzzyGetters::markMethod);
 
         return LexicalPreservingPrinter.print(cu);
+    }
+
+    private static void markMethod(MethodDeclaration md) {
+        markWithStringLiteral(md, CHECK_COMMENT);
     }
 
     private static boolean isNonTrivialGetter(MethodDeclaration md, Set<String> fields) {
