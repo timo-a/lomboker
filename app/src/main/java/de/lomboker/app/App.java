@@ -3,6 +3,7 @@
  */
 package de.lomboker.app;
 
+import de.lomboker.lib.FuzzyEqualsAndHashCode;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
@@ -10,7 +11,8 @@ import picocli.CommandLine.Command;
         subcommands = {
                 CounterApp.class,
                 Reduce.class,
-                Mark.class
+                Mark.class,
+                FuzzyEqualsAndHashCode.class
 })
 public class App implements Runnable {
     public static void main(String[] args) {
