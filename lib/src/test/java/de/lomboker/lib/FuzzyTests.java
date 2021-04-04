@@ -11,7 +11,7 @@ import java.util.StringJoiner;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-public class FuzzyTests {
+public class FuzzyTests extends FileTest {
 
     @Test
     public void testGetterMarker() throws IOException {
@@ -47,7 +47,7 @@ public class FuzzyTests {
     }
 
     @Test
-    public void shouldKeepAnnotationsDebug() throws IOException {
+    public void shouldKeepAnnotationsDebug() {
         String input = new StringJoiner("\n")
                 .add("class A {")
                 .add("")
@@ -90,18 +90,6 @@ public class FuzzyTests {
 
         assertEquals(expected, FuzzySetters.markFuzzySetters(input));
 
-    }
-
-    private String readFile(String fileName) throws IOException {
-        ClassLoader classLoader = getClass().getClassLoader();
-        URL resource = classLoader.getResource(fileName);
-
-        if (resource == null)
-            throw new IllegalArgumentException("file not found! " + fileName);
-
-        File f = new File(resource.getFile());
-
-        return Files.readString(f.toPath());
     }
 
 }

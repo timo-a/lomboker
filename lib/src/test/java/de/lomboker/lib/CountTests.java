@@ -9,7 +9,7 @@ import java.nio.file.Files;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class CountTests {
+public class CountTests extends FileTest {
 
     @Test
     public void testCountTrivialSetters() throws IOException {
@@ -18,18 +18,6 @@ public class CountTests {
 
         int trivialSetters = TrivialSetters.countTrivialSetters(code);
         assertEquals(0, trivialSetters);
-    }
-
-    private String readFile(String fileName) throws IOException {
-        ClassLoader classLoader = getClass().getClassLoader();
-        URL resource = classLoader.getResource(fileName);
-
-        if (resource == null)
-            throw new IllegalArgumentException("file not found! " + fileName);
-
-        File f = new File(resource.getFile());
-
-        return Files.readString(f.toPath());
     }
 
 }

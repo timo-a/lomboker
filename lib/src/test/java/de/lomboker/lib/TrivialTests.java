@@ -10,7 +10,7 @@ import java.nio.file.Files;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-public class TrivialTests {
+public class TrivialTests extends FileTest {
 
     @Test
     public void testGetter() throws IOException {
@@ -139,20 +139,6 @@ public class TrivialTests {
 
         assertEquals(expected, TrivialSetters.reduceSetters(input));
 
-    }
-
-
-
-    private String readFile(String fileName) throws IOException {
-        ClassLoader classLoader = getClass().getClassLoader();
-        URL resource = classLoader.getResource(fileName);
-
-        if (resource == null)
-            throw new IllegalArgumentException("file not found! " + fileName);
-
-        File f = new File(resource.getFile());
-
-        return Files.readString(f.toPath());
     }
 
 }
