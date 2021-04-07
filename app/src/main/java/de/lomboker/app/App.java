@@ -4,6 +4,7 @@
 package de.lomboker.app;
 
 import de.lomboker.app.equalsAndHashCode.ReduceFuzzyEaH;
+import de.lomboker.app.toString.ReduceFuzzyToString;
 import de.lomboker.lib.FuzzyEqualsAndHashCode;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -13,7 +14,8 @@ import picocli.CommandLine.Command;
                 CounterApp.class,
                 Reduce.class,
                 Mark.class,
-                ReduceFuzzyEaH.class
+                ReduceFuzzyEaH.class,
+                ReduceFuzzyToString.class
 })
 public class App implements Runnable {
     public static void main(String[] args) {
