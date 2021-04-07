@@ -11,6 +11,8 @@ import com.github.javaparser.printer.lexicalpreservation.LexicalPreservingPrinte
 
 import java.util.Optional;
 
+import static de.lomboker.lib.Utils.nameMatch;
+
 public class FuzzyEqualsAndHashCode {
 
     public static String reduceFuzzyEqualsAndHashCode(String code) {
@@ -60,11 +62,13 @@ public class FuzzyEqualsAndHashCode {
     }
 
     static boolean isEquals(MethodDeclaration md) {
+        boolean nameMatch = nameMatch(md, "equals");
         boolean isPublic = AccessSpecifier.PUBLIC.equals(md.getAccessSpecifier());
         boolean isBoolean = "boolean".equals(md.getTypeAsString());
         boolean oneParameter = md.getParameters().size() == 1;
 
-        return isPublic
+        return nameMatch
+                && isPublic
                 && isBoolean
                 && oneParameter
                 && paramIsObject(md);
@@ -81,11 +85,13 @@ public class FuzzyEqualsAndHashCode {
     }
 
     static boolean isHashCode(MethodDeclaration md) {
+        boolean nameMatch = nameMatch(md, "toString");
         boolean isPublic = AccessSpecifier.PUBLIC.equals(md.getAccessSpecifier());
         boolean isInt = "int".equals(md.getTypeAsString());
         boolean noParameter = md.getParameters().isEmpty();
 
-        return isPublic
+        return nameMatch
+                && isPublic
                 && isInt
                 && noParameter;
     }
