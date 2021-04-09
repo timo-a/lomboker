@@ -47,3 +47,6 @@ while read f; do lomboker mark setter "$f"; done < fuzzySetters.txt;
    - test required for push
    - build jars
    - getter setter shall have their own line 
+   - toString
+   - noArgsConstructor
+   - summarize getter/setter
