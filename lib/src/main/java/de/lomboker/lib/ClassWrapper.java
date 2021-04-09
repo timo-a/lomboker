@@ -2,13 +2,14 @@ package de.lomboker.lib;
 
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.NodeList;
+import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.expr.AnnotationExpr;
+import com.github.javaparser.printer.lexicalpreservation.LexicalPreservingPrinter;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ClassWrapper {
@@ -34,5 +35,19 @@ public class ClassWrapper {
         for (FieldDeclaration fd: this.fields) {
             fieldsByName.put(fd.getVariable(0).getName().asString(), fd);
         }
+    }
+
+    public boolean writeAnnotationToClass(String annotation){
+        Optional<ClassOrInterfaceDeclaration> oFirstClass =  cu.findFirst(ClassOrInterfaceDeclaration.class);
+
+        if(oFirstClass.isEmpty()) {
+            return false;
+        }
+
+        ClassOrInterfaceDeclaration firstClass = oFirstClass.get();
+
+        NodeList<AnnotationExpr> as = firstClass.getAnnotations();
+        firstClass.addMarkerAnnotation(annotation);
+        return true;
     }
 }
