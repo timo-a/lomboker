@@ -6,7 +6,7 @@ import javax.annotation.Nonnull;
 
 public class Utils {
 
-    static boolean nameMatch(MethodDeclaration md, @Nonnull String name){
+    public static boolean nameMatch(MethodDeclaration md, @Nonnull String name){
         return name.equals(md.getNameAsString());
     }
 }

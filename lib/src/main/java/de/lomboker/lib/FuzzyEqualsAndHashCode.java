@@ -59,7 +59,7 @@ public class FuzzyEqualsAndHashCode {
 
     }
 
-    static boolean isEquals(MethodDeclaration md) {
+    public static boolean isEquals(MethodDeclaration md) {
         boolean nameMatch = nameMatch(md, "equals");
         boolean isPublic = AccessSpecifier.PUBLIC.equals(md.getAccessSpecifier());
         boolean isBoolean = "boolean".equals(md.getTypeAsString());
@@ -72,7 +72,7 @@ public class FuzzyEqualsAndHashCode {
                 && paramIsObject(md);
     }
 
-    static boolean paramIsObject(MethodDeclaration md) {
+    public static boolean paramIsObject(MethodDeclaration md) {
         var op = md.getParameters().getFirst();
         if(op.isEmpty()) {
             return false;

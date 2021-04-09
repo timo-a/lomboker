@@ -8,7 +8,7 @@ import java.nio.file.Files;
 
 import static de.lomboker.lib.FuzzyToString.reduceFuzzyToString;
 
-@CommandLine.Command(name = "toString", description = "reduce equals and hash code")
+@CommandLine.Command(name = "toString", description = "reduce toString method, generate annotation with print fields")
 public class ReduceFuzzyToString implements Runnable {
 
     @CommandLine.Parameters(index = "0")

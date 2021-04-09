@@ -5,7 +5,7 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
-import com.github.javaparser.ast.expr.AnnotationExpr;
+import com.github.javaparser.ast.expr.*;
 import com.github.javaparser.printer.lexicalpreservation.LexicalPreservingPrinter;
 
 import java.util.Optional;
@@ -39,7 +39,10 @@ public class FuzzyToString {
             ClassOrInterfaceDeclaration firstClass = oFirstClass.get();
 
             NodeList<AnnotationExpr> as = firstClass.getAnnotations();
-            firstClass.addMarkerAnnotation("ToString(includeFieldNames = true)");
+
+            MemberValuePair mvp = new MemberValuePair("includeFieldNames", new BooleanLiteralExpr(true));
+            NodeList<MemberValuePair> nodeList = NodeList.nodeList(mvp);
+            firstClass.addAnnotation(new NormalAnnotationExpr(new Name("ToString"), nodeList));
 
             //remove equals, hashCode
             toString.get().removeJavaDocComment();
