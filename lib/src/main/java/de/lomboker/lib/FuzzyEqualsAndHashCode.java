@@ -83,7 +83,7 @@ public class FuzzyEqualsAndHashCode {
     }
 
     static boolean isHashCode(MethodDeclaration md) {
-        boolean nameMatch = nameMatch(md, "toString");
+        boolean nameMatch = nameMatch(md, "hashCode");
         boolean isPublic = AccessSpecifier.PUBLIC.equals(md.getAccessSpecifier());
         boolean isInt = "int".equals(md.getTypeAsString());
         boolean noParameter = md.getParameters().isEmpty();
