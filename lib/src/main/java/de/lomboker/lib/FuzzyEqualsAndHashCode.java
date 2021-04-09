@@ -36,10 +36,8 @@ public class FuzzyEqualsAndHashCode {
         if (equals.isPresent() && hashCode.isPresent()) {
             cu.addImport("lombok.EqualsAndHashCode");
 
-            cu.findAll(ClassOrInterfaceDeclaration.class);
+            Optional<ClassOrInterfaceDeclaration> oFirstClass =  cu.findFirst(ClassOrInterfaceDeclaration.class);
 
-            //add annotation
-            Optional<ClassOrInterfaceDeclaration> oFirstClass = cu.findFirst(ClassOrInterfaceDeclaration.class);
             if(oFirstClass.isEmpty()) {
                 System.out.println("Error! no class found");
                 return LexicalPreservingPrinter.print(cu);
