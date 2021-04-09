@@ -41,7 +41,7 @@ public class FuzzyToString {
             ClassOrInterfaceDeclaration firstClass = oFirstClass.get();
 
             NodeList<AnnotationExpr> as = firstClass.getAnnotations();
-            firstClass.addMarkerAnnotation("ToString");
+            firstClass.addMarkerAnnotation("ToString(includeFieldNames = true)");
 
             //remove equals, hashCode
             toString.get().removeJavaDocComment();
