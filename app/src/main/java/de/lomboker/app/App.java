@@ -13,7 +13,8 @@ import picocli.CommandLine.Command;
         subcommands = {
                 CounterApp.class,
                 Reduce.class,
-                Mark.class
+                Mark.class,
+                Summarize.class
         })
 public class App implements Runnable {
     public static void main(String[] args) {

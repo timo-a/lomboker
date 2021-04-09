@@ -14,6 +14,7 @@ import com.github.javaparser.printer.lexicalpreservation.LexicalPreservingPrinte
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static de.lomboker.lib.Utils.nameMatch;
@@ -40,10 +41,13 @@ public class SummarizeGetterSetter {
 
         MarkerAnnotationExpr mae = new MarkerAnnotationExpr(annotation);
 
-        boolean fullyAnnotated = allNonStatic.stream()
-                .allMatch(fd -> fd.getAnnotations().contains(mae));
+        Predicate<FieldDeclaration> hasAnnotation = fd -> fd.getAnnotations()
+                                                            .contains(mae);
 
-        if (fullyAnnotated) {
+        boolean positivelyAnnotated = allNonStatic.stream().anyMatch(hasAnnotation);
+        boolean fullyAnnotated = allNonStatic.stream().allMatch(hasAnnotation);
+
+        if (positivelyAnnotated && fullyAnnotated) {
 
             if(!wrapper.writeAnnotationToClass(annotation)) {
                 System.out.println("Error! no class found");
