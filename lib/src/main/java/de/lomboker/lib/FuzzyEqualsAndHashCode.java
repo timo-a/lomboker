@@ -11,7 +11,7 @@ import com.github.javaparser.printer.lexicalpreservation.LexicalPreservingPrinte
 
 import java.util.Optional;
 
-import static de.lomboker.lib.Utils.nameMatch;
+import de.lomboker.lib.Utils;
 
 public class FuzzyEqualsAndHashCode {
 
@@ -94,6 +94,11 @@ public class FuzzyEqualsAndHashCode {
                 && isPublic
                 && isInt
                 && noParameter;
+    }
+
+    //todo move into utils class
+    static boolean nameMatch(MethodDeclaration md, String name){
+        return name.equals(md.getNameAsString());
     }
 
 }
