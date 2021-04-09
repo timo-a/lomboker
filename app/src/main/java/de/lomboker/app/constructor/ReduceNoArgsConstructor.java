@@ -13,7 +13,7 @@ import java.nio.file.Files;
 import static de.lomboker.lib.NoArgsConstructor.reduceNoArgsConstructor;
 import static de.lomboker.lib.TrivialGetters.reduceGetters;
 
-@Command(name = "constructor", description = "reduce no args constructor")
+@Command(name = "no-args-constructor", description = "reduce no args constructor")
 public class ReduceNoArgsConstructor implements Runnable {
 
     @Parameters(index = "0")

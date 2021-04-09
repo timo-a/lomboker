@@ -11,6 +11,7 @@ import picocli.CommandLine.Command;
         subcommands = {
             ReduceGetter.class,
             ReduceSetter.class,
+            ReduceFuzzyEaH.class,
             ReduceFuzzyToString.class,
             ReduceNoArgsConstructor.class},
         description = "no options or positional parameters")

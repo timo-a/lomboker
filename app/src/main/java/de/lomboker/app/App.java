@@ -13,10 +13,8 @@ import picocli.CommandLine.Command;
         subcommands = {
                 CounterApp.class,
                 Reduce.class,
-                Mark.class,
-                ReduceFuzzyEaH.class,
-                ReduceFuzzyToString.class
-})
+                Mark.class
+        })
 public class App implements Runnable {
     public static void main(String[] args) {
         new CommandLine(new App()).execute(args);
