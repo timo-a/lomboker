@@ -81,6 +81,8 @@ cat counts.txt | awk '{print $1, $5}' | grep " 0$" | awk '{print $1}' > fuzzySet
 while read f; do lomboker mark setter "$f"; done < fuzzySetters.txt;
 while read f; do sed -i "s|TODO Lomboker says check|//TODO Lomboker says check|g" "$f"; done < fuzzySetters.txt;
 ```
+### Summarize getter, setter
+Replaces all method level annotations with one class level annotation.
 
 ### Reduce Equals and hash code
 This reduces `equals` and `hashCode` if both appear. Use git tools to review the changes.
